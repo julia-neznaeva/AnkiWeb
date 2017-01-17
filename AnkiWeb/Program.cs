@@ -13,19 +13,22 @@ namespace AnkiWeb
         static void Main(string[] args)
         {
 
-            CookieContainer cookieJar = new CookieContainer();
+     
             HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create("https://ankiweb.net");
-            httpWebRequest.CookieContainer = cookieJar;
+            httpWebRequest.CookieContainer = new CookieContainer();
+
             HttpWebResponse httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse();
-            int cookieCount = cookieJar.Count;
+
+           
             string postData = "submited = 1";
             postData += "&username = sequel282@gmail.com";
             postData += "&password = 1123581321";
-            postData += "&csrf_token = eyJpcCI6ICIxODguMTYzLjE4NC4xNjYiLCAiaWF0IjogMTQ4NDYwMDc4NiwgIm9wIjogImxvZ2luIn0";
             var data = Encoding.ASCII.GetBytes(postData);
             HttpWebRequest loginRequest  = (HttpWebRequest)WebRequest.Create("https://ankiweb.net/account/login");
             loginRequest.Method = "POST";
+            loginRequest.ContentType = "application/x-www-form-urlencoded";
             loginRequest.ContentLength = data.Length;
+            loginRequest.CookieContainer = httpWebRequest.CookieContainer;
 
             using (var stream = loginRequest.GetRequestStream())
             {
